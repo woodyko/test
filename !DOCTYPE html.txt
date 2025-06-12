@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Team Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Team Generator</h1>
+    <label for="totalMembers">Total Members (5-50):</label>
+    <input type="number" id="totalMembers" min="5" max="50"><br>
+    <label for="membersPerTeam">Members per Team:</label>
+    <input type="number" id="membersPerTeam" min="1"><br>
+    <button onclick="generateTeams()">Generate Teams</button>
+    <div id="error" class="error"></div>
+    <div id="teams"></div>
+
+    <script>
+        function generateTeams() {
+            const totalMembers = document.getElementById('totalMembers').value;
+            const membersPerTeam = document.getElementById('membersPerTeam').value;
+            const errorDiv = document.getElementById('error');
+            const teamsDiv = document.getElementById('teams');
+
+            if (isNaN(totalMembers) || isNaN(membersPerTeam) || totalMembers < 5 || totalMembers > 50 || membersPerTeam < 1 || totalMembers % membersPerTeam !== 0) {
+                errorDiv.textContent = "Please enter valid numbers. Total members must be between 5 and 50, and members per team must be a positive number that divides the total members evenly.";
+                return;
+            }
+
+            let names = [];
+            for (let i = 1; i <= totalMembers; i++) {
+                names.push(prompt(`Enter name for member ${i}`));
+            }
+
+            names = names.sort(() => Math.random() - 0.5);
+            const teams = [];
+            for (let i = 0; i < totalMembers; i += membersPerTeam) {
+                teams.push(names.slice(i, i + membersPerTeam));
+            }
+
+            errorDiv.textContent = "";
+            teamsDiv.innerHTML = "";
+            teams.forEach((team, index) => {
+                teamsDiv.innerHTML += `<p>Team ${index + 1}: ${team.join(', ')}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
